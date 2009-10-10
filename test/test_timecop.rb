@@ -218,6 +218,13 @@ class TestTimecop < Test::Unit::TestCase
     assert times_effectively_equal(t_real, t_return)
   end
 
+  def test_freeze_with_timezone
+      t = DateTime.parse("2009-10-11 00:38:00 +0200")
+      assert_equal "+02:00", t.zone
+      Timecop.freeze(t) do
+        assert_equal "+02:00", DateTime.now.zone
+      end
+  end
 
 private
 
@@ -226,5 +233,4 @@ private
   def times_effectively_equal(time1, time2, seconds_interval = 1)
     (time1.to_i - time2.to_i).abs <= seconds_interval
   end
-    
 end
