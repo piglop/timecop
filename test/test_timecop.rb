@@ -65,18 +65,20 @@ class TestTimecop < Test::Unit::TestCase
   
   def test_freeze_with_time_instance_works_as_expected
     t = Time.local(2008, 10, 10, 10, 10, 10)
+    local_offset = DateTime.now.offset
     Timecop.freeze(t) do 
       assert_equal t, Time.now
-      assert_equal DateTime.new(2008, 10, 10, 10, 10, 10), DateTime.now
+      assert_equal DateTime.new(2008, 10, 10, 10, 10, 10, local_offset), DateTime.now
       assert_equal Date.new(2008, 10, 10), Date.today
     end
     assert_not_equal t, Time.now
-    assert_not_equal DateTime.new(2008, 10, 10, 10, 10, 10), DateTime.now
+    assert_not_equal DateTime.new(2008, 10, 10, 10, 10, 10, local_offset), DateTime.now
     assert_not_equal Date.new(2008, 10, 10), Date.today
   end
   
   def test_freeze_with_datetime_instance_works_as_expected
-    t = DateTime.new(2008, 10, 10, 10, 10, 10)
+    local_offset = DateTime.now.offset
+    t = DateTime.new(2008, 10, 10, 10, 10, 10, local_offset)
     Timecop.freeze(t) do 
       assert_equal t, DateTime.now
       assert_equal Time.local(2008, 10, 10, 10, 10, 10), Time.now
@@ -89,21 +91,23 @@ class TestTimecop < Test::Unit::TestCase
   
   def test_freeze_with_date_instance_works_as_expected
     d = Date.new(2008, 10, 10)
+    local_offset = DateTime.now.offset
     Timecop.freeze(d) do
       assert_equal d, Date.today
       assert_equal Time.local(2008, 10, 10, 0, 0, 0), Time.now
-      assert_equal DateTime.new(2008, 10, 10, 0, 0, 0), DateTime.now
+      assert_equal DateTime.new(2008, 10, 10, 0, 0, 0, local_offset), DateTime.now
     end
     assert_not_equal d, Date.today
     assert_not_equal Time.local(2008, 10, 10, 0, 0, 0), Time.now
-    assert_not_equal DateTime.new(2008, 10, 10, 0, 0, 0), DateTime.now    
+    assert_not_equal DateTime.new(2008, 10, 10, 0, 0, 0, local_offset), DateTime.now    
   end
   
   def test_freeze_with_integer_instance_works_as_expected
     t = Time.local(2008, 10, 10, 10, 10, 10)
+    local_offset = DateTime.now.offset
     Timecop.freeze(t) do
       assert_equal t, Time.now
-      assert_equal DateTime.new(2008, 10, 10, 10, 10, 10), DateTime.now
+      assert_equal DateTime.new(2008, 10, 10, 10, 10, 10, local_offset), DateTime.now
       assert_equal Date.new(2008, 10, 10), Date.today
       Timecop.freeze(10) do
         assert_equal t + 10, Time.now
