@@ -226,6 +226,14 @@ class TestTimecop < Test::Unit::TestCase
       end
   end
 
+  def test_date_time_converted_to_local_time_is_still_the_same_time
+      t = DateTime.parse("2009-10-11 00:38:00 +0200")
+      assert_equal t.to_s, t.new_offset(t.offset).to_s
+      Timecop.freeze(t) do
+        assert_equal t.to_s, DateTime.now.new_offset(t.offset).to_s
+      end
+  end
+
 private
 
   # Tests to see that two times are within the given distance,
